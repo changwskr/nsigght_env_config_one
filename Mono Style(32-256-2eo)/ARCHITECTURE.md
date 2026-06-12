@@ -8,8 +8,8 @@ nh.marketing.com
 Apache HTTPD 2.4
    ↓
 Tomcat Cluster (32 vCPU / 256GB x 2)
-   ├─ tomcat-01, jvmRoute=tc01, Heap 192GB
-   └─ tomcat-02, jvmRoute=tc02, Heap 192GB
+   ├─ tomcat-01, jvmRoute=tc01, Heap 64GB (동시 3,600)
+   └─ tomcat-02, jvmRoute=tc02, Heap 64GB (동시 3,600)
    ↓
 17 Spring Boot WAR
    ↓

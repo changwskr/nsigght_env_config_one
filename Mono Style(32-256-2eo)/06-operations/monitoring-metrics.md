@@ -1,6 +1,6 @@
 # 운영 모니터링 기준
 
-기준 서버: Tomcat 노드 2대, 각 32 vCPU / 256GB RAM, JVM Heap 192GB
+기준 서버: Tomcat 노드 2대, 각 32 vCPU / 256GB RAM, JVM Heap 64GB (동시 3,600 / 트랜잭션 3초)
 
 | 영역 | 지표 | Warning | Critical |
 |---|---|---:|---:|

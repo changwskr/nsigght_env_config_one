@@ -1,5 +1,5 @@
 [Unit]
-Description=NSIGHT Tomcat tc02 (32 vCPU / 256GB, Heap 192GB)
+Description=NSIGHT Tomcat tc02 (32 vCPU / 256GB, Heap 64GB)
 After=network.target
 
 [Service]

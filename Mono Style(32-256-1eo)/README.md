@@ -25,7 +25,7 @@
 | VM | **1대**, 32 vCPU / 256GB |
 | 배포 | Apache + Tomcat 동일 서버 |
 | Tomcat 노드 | **1대** (`127.0.0.1:8080`) |
-| JVM Heap | **160GB** (Apache·OS 여유 ~96GB) |
+| JVM Heap | **48GB** (동시 3,600·트랜잭션 3초 산정, 풀부하 테스트 시 64GB) |
 | 세션 복제 | **미사용** (단일 Tomcat) |
 | Sticky Session | **미사용** |
 | Spring Profile | `dev` |
@@ -41,7 +41,7 @@
 | VM 수 | 1대 | 2대 |
 | Cluster | 없음 | DeltaManager |
 | Apache | `127.0.0.1:8080` 직접 Proxy | Balancer + Sticky |
-| Heap | 160GB | 192GB/노드 |
+| Heap | 48GB | 64GB/노드 |
 | Profile | dev | prod |
 | distributable | 선택 (운영 전환 시 필수) | 필수 |
 

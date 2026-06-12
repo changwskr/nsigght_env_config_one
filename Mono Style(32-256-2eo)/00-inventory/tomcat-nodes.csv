@@ -1,3 +1,3 @@
-﻿node,host,http_port,shutdown_port,cluster_receiver_port,jvm_route,center,cpu,ram_gb,heap_gb
-tomcat-01,10.10.20.11,8080,8005,4000,tc01,CENTER-A,32,256,192
-tomcat-02,10.10.20.12,8080,8005,4000,tc02,CENTER-A,32,256,192
+﻿node,host,http_port,shutdown_port,cluster_receiver_port,jvm_route,center,cpu,ram_gb,heap_gb,concurrent_users
+tomcat-01,10.10.20.11,8080,8005,4000,tc01,CENTER-A,32,256,64,3600
+tomcat-02,10.10.20.12,8080,8005,4000,tc02,CENTER-A,32,256,64,3600

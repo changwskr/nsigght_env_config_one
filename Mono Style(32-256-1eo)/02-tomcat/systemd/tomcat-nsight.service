@@ -1,5 +1,5 @@
 [Unit]
-Description=NSIGHT Tomcat Dev (32 vCPU / 256GB single VM, Heap 160GB)
+Description=NSIGHT Tomcat Dev (32 vCPU / 256GB single VM, Heap 48GB)
 After=network.target
 
 [Service]

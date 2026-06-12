@@ -1,6 +1,6 @@
 # 운영 모니터링 기준
 
-기준 서버: 개발 VM 1대, 32 vCPU / 256GB RAM, JVM Heap 160GB (Apache 동일 VM)
+기준 서버: 개발 VM 1대, 32 vCPU / 256GB RAM, JVM Heap 48GB (Apache 동일 VM)
 
 | 영역 | 지표 | Warning | Critical |
 |---|---|---:|---:|

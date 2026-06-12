@@ -24,7 +24,8 @@
 | WAR 수 | 17개 |
 | 도메인 | `nh.marketing.com` |
 | Tomcat 노드 | 2대: `tc01`, `tc02` (각 32 vCPU / 256GB) |
-| JVM Heap | 노드당 192GB (`-Xms192g -Xmx192g`) |
+| 동시 사용자 | 지점 6,000 × 6명, 동시 10% = **3,600** |
+| JVM Heap | 노드당 **64GB** (`-Xms64g -Xmx64g`, 트랜잭션 3초·장애 시 단일 노드 전량 수용 기준) |
 | 세션 복제 | Tomcat DeltaManager, 센터 내부 Cluster 한정 |
 | Sticky 기준 | Apache `JSESSIONID` route / Tomcat `jvmRoute` |
 | 세션 Timeout | 기본 60분, Absolute Timeout 8시간은 애플리케이션 공통 Filter 구현 |
