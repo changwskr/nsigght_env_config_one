@@ -1,0 +1,105 @@
+# ============================================================
+# NSIGHT Marketing Platform - Common Spring Boot Configuration
+# Apply to all services: customer/campaign/event/support/platform
+# ============================================================
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        name: NSIGHTSESSION
+        path: /
+        http-only: true
+        secure: true
+        same-site: Lax
+  tomcat:
+    threads:
+      max: 500
+      min-spare: 100
+    accept-count: 500
+    max-connections: 10000
+    connection-timeout: 8s
+    keep-alive-timeout: 5s
+    max-keep-alive-requests: 100
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: nsight-service
+
+  profiles:
+    active: prod
+
+  session:
+    store-type: jdbc
+    timeout: 60m
+    jdbc:
+      initialize-schema: never
+      table-name: SPRING_SESSION
+      cleanup-cron: "0 */10 * * * *"
+    flush-mode: on_save
+    save-mode: on_set_attribute
+
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@10.10.50.20:1521/NSIGHT
+    username: nsight
+    password: CHANGEME
+    hikari:
+      pool-name: nsight-hikari
+      maximum-pool-size: 50
+      minimum-idle: 15
+      connection-timeout: 3000
+      validation-timeout: 3000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      keepalive-time: 300000
+      auto-commit: false
+
+mybatis:
+  configuration:
+    default-statement-timeout: 3
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: NULL
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.nh.nsight
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      system: nsight
+      platform: marketing
+
+logging:
+  level:
+    root: INFO
+    com.nh.nsight: INFO
+    org.springframework.session: WARN
+    org.mybatis: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{guid}] [%X{traceId}] [%thread] %logger{36} - %msg%n"
+
+nsight:
+  session:
+    idle-timeout-minutes: 60
+    absolute-timeout-hours: 8
+  timeout:
+    transaction-seconds: 5
+    db-query-seconds: 3
+    external-connect-millis: 3000
+    external-read-millis: 5000
+  security:
+    cookie-domain: nh.marketing.com
+    masking-enabled: true
+  log:
+    guid-header-name: X-GUID
+    trace-header-name: X-Trace-Id

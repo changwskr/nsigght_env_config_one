@@ -1,0 +1,19 @@
+# ============================================================
+# nsight-support-service Configuration
+# ============================================================
+
+spring:
+  application:
+    name: nsight-support-service
+
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /support
+
+nsight:
+  service:
+    code: SUPPORT
+    name: nsight-support-service

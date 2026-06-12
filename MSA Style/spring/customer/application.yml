@@ -1,0 +1,19 @@
+# ============================================================
+# nsight-customer-service Configuration
+# ============================================================
+
+spring:
+  application:
+    name: nsight-customer-service
+
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /customer
+
+nsight:
+  service:
+    code: CUSTOMER
+    name: nsight-customer-service

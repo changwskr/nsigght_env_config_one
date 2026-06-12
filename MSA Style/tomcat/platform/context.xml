@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Session: Spring Session JDBC (shared DB). Tomcat DeltaManager/PersistentManager 미사용 -->
+<Context path="/platform"
+         docBase="/app/nsight/platform/platform-service.war"
+         reloadable="false"
+         sessionCookieName="NSIGHTSESSION">
+</Context>

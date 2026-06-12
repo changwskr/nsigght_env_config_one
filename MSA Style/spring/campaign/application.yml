@@ -1,0 +1,19 @@
+# ============================================================
+# nsight-campaign-service Configuration
+# ============================================================
+
+spring:
+  application:
+    name: nsight-campaign-service
+
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /campaign
+
+nsight:
+  service:
+    code: CAMPAIGN
+    name: nsight-campaign-service

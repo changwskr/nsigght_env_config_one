@@ -1,0 +1,19 @@
+# ============================================================
+# nsight-platform-service Configuration
+# ============================================================
+
+spring:
+  application:
+    name: nsight-platform-service
+
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /platform
+
+nsight:
+  service:
+    code: PLATFORM
+    name: nsight-platform-service

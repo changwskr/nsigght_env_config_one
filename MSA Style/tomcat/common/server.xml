@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================
+     NSIGHT Marketing Platform - Tomcat server.xml
+     Service별 Tomcat에 동일 적용, jvmRoute만 서버별로 변경 가능
+     Session sharing: Spring Session JDBC (shared DB)
+     DeltaManager: Not used
+     ========================================================== -->
+
+<Server port="8005" shutdown="SHUTDOWN">
+
+    <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+    <GlobalNamingResources>
+        <Resource name="UserDatabase"
+                  auth="Container"
+                  type="org.apache.catalina.UserDatabase"
+                  description="User database that can be updated and saved"
+                  factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+                  pathname="conf/tomcat-users.xml" />
+    </GlobalNamingResources>
+
+    <Service name="Catalina">
+
+        <Connector port="8080"
+                   protocol="HTTP/1.1"
+                   maxThreads="500"
+                   minSpareThreads="100"
+                   acceptCount="500"
+                   maxConnections="10000"
+                   connectionTimeout="8000"
+                   keepAliveTimeout="5000"
+                   maxKeepAliveRequests="100"
+                   URIEncoding="UTF-8"
+                   useBodyEncodingForURI="true"
+                   server="NSIGHT-Tomcat"
+                   redirectPort="8443" />
+
+        <!-- jvmRoute is optional when DB-backed Spring Session is used.
+             Set unique value only if Apache sticky routing is required. -->
+        <Engine name="Catalina" defaultHost="localhost" jvmRoute="${JVM_ROUTE}">
+
+            <Realm className="org.apache.catalina.realm.LockOutRealm">
+                <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+                       resourceName="UserDatabase"/>
+            </Realm>
+
+            <Host name="localhost"
+                  appBase="webapps"
+                  unpackWARs="true"
+                  autoDeploy="false"
+                  deployOnStartup="true">
+
+                <Valve className="org.apache.catalina.valves.AccessLogValve"
+                       directory="logs"
+                       prefix="localhost_access_log"
+                       suffix=".txt"
+                       pattern="%h %l %u %t &quot;%r&quot; %s %b %D %{X-GUID}i %{X-Trace-Id}i" />
+
+            </Host>
+        </Engine>
+    </Service>
+</Server>

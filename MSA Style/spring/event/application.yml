@@ -1,0 +1,19 @@
+# ============================================================
+# nsight-event-service Configuration
+# ============================================================
+
+spring:
+  application:
+    name: nsight-event-service
+
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /event
+
+nsight:
+  service:
+    code: EVENT
+    name: nsight-event-service
