@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이벤트/반응 조회 -->
+<Context path="/event-service" docBase="nsight-event-service.war" reloadable="false" crossContext="true" />
+

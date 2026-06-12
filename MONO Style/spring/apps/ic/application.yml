@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-ic Configuration (MONO)
+# WAR: ic.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-ic
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /ic
+
+nsight:
+  service:
+    code: IC
+    name: nsight-ic
+    war: ic.war
+

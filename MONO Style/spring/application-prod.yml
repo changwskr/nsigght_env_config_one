@@ -1,0 +1,24 @@
+# ============================================================
+# NSIGHT MONO - Production Profile
+#
+# [활성화]
+#   spring.profiles.active=prod (기본값)
+#   setenv.sh: -Dspring.profiles.active=prod
+#
+# [역할]
+#   application-common.yml 공통 설정을 import
+#   운영 로그 레벨(INFO) 및 환경 식별자(prod) 적용
+# ============================================================
+
+spring:
+  config:
+    # 공통 설정 로드 — HikariCP, Session, MyBatis, 타임아웃 등
+    import: optional:file:/app/nsight/config/application-common.yml
+
+logging:
+  level:
+    root: INFO                        # 운영 기본 로그 레벨
+    com.nh.nsight: INFO
+
+nsight:
+  env: prod                           # 모니터링·로그 태그용 환경 구분

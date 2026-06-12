@@ -1,0 +1,3 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 메인 포털/공통 메뉴 -->
+<Context path="/portal" docBase="nsight-portal.war" reloadable="true" crossContext="true" />

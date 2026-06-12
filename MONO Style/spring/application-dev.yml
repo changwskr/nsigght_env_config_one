@@ -1,0 +1,43 @@
+# ============================================================
+# NSIGHT MONO - Development Profile
+#
+# [활성화]
+#   spring.profiles.active=dev
+#   또는 setenv.sh: -Dspring.profiles.active=dev
+#
+# [역할]
+#   application-common.yml 공통 설정을 import 한 뒤
+#   개발 환경에 맞게 Pool·로그·Cookie 보안을 완화
+# ============================================================
+
+spring:
+  config:
+    # 공통 설정 로드 (Session, MyBatis, nsight.* 등)
+    import: optional:file:/app/nsight/config/application-common.yml
+
+  datasource:
+    # 개발 환경 — DB Pool 축소 (로컬/개발 DB 부하 최소화)
+    rdw:
+      hikari:
+        maximum-pool-size: 32
+        minimum-idle: 8
+    adw:
+      hikari:
+        maximum-pool-size: 16
+        minimum-idle: 4
+
+server:
+  servlet:
+    session:
+      cookie:
+        # 로컬 HTTP 개발 시 secure=false (HTTPS 없이 쿠키 전송 허용)
+        secure: false
+
+logging:
+  level:
+    root: DEBUG
+    com.nh.nsight: DEBUG
+    org.mybatis: DEBUG              # SQL 디버깅
+
+nsight:
+  env: dev

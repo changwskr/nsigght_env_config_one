@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 개발 단일 VM — DeltaManager 미사용, 표준 세션 Manager -->
+<Context sessionCookieName="JSESSIONID" useHttpOnly="true">
+  <WatchedResource>WEB-INF/web.xml</WatchedResource>
+  <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor" sameSiteCookies="lax" />
+  <JarScanner scanManifest="false" />
+</Context>

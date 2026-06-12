@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  운영 환경 Multicast 대신 Static Membership 사용 시
+  server.xml Channel Membership을 아래로 교체:
+
+  <Membership className="org.apache.catalina.tribes.membership.StaticMembershipProvider">
+      <Member className="org.apache.catalina.tribes.membership.StaticMember"
+              port="4000"
+              host="10.10.20.11"
+              uniqueId="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}" />
+      <Member className="org.apache.catalina.tribes.membership.StaticMember"
+              port="4000"
+              host="10.10.20.12"
+              uniqueId="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2}" />
+  </Membership>
+-->

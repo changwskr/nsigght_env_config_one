@@ -1,0 +1,3 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 관리자/권한/코드관리 -->
+<Context path="/admin-service" docBase="nsight-admin-service.war" reloadable="true" crossContext="true" />

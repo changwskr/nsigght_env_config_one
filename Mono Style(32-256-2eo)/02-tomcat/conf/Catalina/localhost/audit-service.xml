@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 감사로그/거래로그 조회 -->
+<Context path="/audit-service" docBase="nsight-audit-service.war" reloadable="false" crossContext="true" />
+

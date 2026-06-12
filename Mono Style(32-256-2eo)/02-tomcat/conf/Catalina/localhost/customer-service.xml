@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 고객 기본/상세 조회 -->
+<Context path="/customer-service" docBase="nsight-customer-service.war" reloadable="false" crossContext="true" />
+

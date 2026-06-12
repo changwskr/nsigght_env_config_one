@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-cs Configuration (MONO)
+# WAR: cs.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-cs
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /cs
+
+nsight:
+  service:
+    code: CS
+    name: nsight-cs
+    war: cs.war
+

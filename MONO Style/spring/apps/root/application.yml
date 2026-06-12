@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-root Configuration (MONO)
+# WAR: root.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-root
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /
+
+nsight:
+  service:
+    code: ROOT
+    name: nsight-root
+    war: root.war
+

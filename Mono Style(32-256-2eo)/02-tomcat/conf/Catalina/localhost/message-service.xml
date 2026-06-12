@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 메시지/템플릿/발송관리 -->
+<Context path="/message-service" docBase="nsight-message-service.war" reloadable="false" crossContext="true" />
+

@@ -1,0 +1,2 @@
+﻿node,host,http_port,shutdown_port,cluster_receiver_port,jvm_route,center,cpu,ram_gb,heap_gb,note
+dev-vm,127.0.0.1,8080,8005,,dev1,DEV,32,256,160,Apache+Tomcat 동일 VM 개발용 단일 노드

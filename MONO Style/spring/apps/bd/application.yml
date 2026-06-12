@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-bd Configuration (MONO)
+# WAR: bd.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-bd
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /bd
+
+nsight:
+  service:
+    code: BD
+    name: nsight-bd
+    war: bd.war
+

@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 공통코드/기준정보 조회 -->
+<Context path="/code-service" docBase="nsight-code-service.war" reloadable="false" crossContext="true" />
+

@@ -1,0 +1,138 @@
+# ============================================================
+# NSIGHT Marketing Platform (MONO) - Common Spring Boot Config
+# 32 vCPU / 256GB — 단일 Tomcat 17 WAR 공통 설정
+# Session: Tomcat DeltaManager (Servlet Session, JDBC Session 미사용)
+#
+# [연동 관계]
+#   - apps/*/application.yml : spring.config.import 로 본 파일 참조
+#   - DataSourceConfig.java  : spring.datasource.rdw / adw 바인딩
+#   - MyBatisConfig.java     : SqlSessionFactory, Query Timeout
+#   - SessionTimeoutFilter   : nsight.session.absolute-timeout-hours
+#   - setenv.sh              : -Dspring.config.additional-location=/app/nsight/config/
+# ============================================================
+
+server:
+  port: 8080
+
+  servlet:
+    session:
+      # Idle Session 60분 — 미사용 시 만료 (Absolute 8시간은 SessionTimeoutFilter)
+      timeout: 60m
+      cookie:
+        name: JSESSIONID          # Apache stickysession 과 동일 (nsight-balancer.conf)
+        path: /
+        domain: nh.marketing.com
+        http-only: true             # JavaScript 접근 차단
+        secure: true                # HTTPS 전용 (dev 프로파일에서 false 로 override)
+        same-site: Lax              # CSRF 완화
+
+  tomcat:
+    # Embedded Tomcat 스레드 (외부 Tomcat WAR 배포 시 server.xml 과 정합 유지)
+    threads:
+      max: 3200                     # 32 vCPU 기준
+      min-spare: 400
+    accept-count: 2000              # 대기 큐
+    max-connections: 50000
+    connection-timeout: 8s
+    keep-alive-timeout: 5s
+    max-keep-alive-requests: 100
+
+  # Apache X-Forwarded-* 헤더 인식 (HTTPS·도메인 판별)
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: nsight-mono-app           # WAR별 apps/*/application.yml 에서 개별 override
+
+  profiles:
+    active: prod                    # setenv.sh -Dspring.profiles.active=prod 와 연동
+
+  # DeltaManager 사용 — Spring Session 미사용 (Servlet HttpSession)
+  transaction:
+    default-timeout: 5s             # @Transactional 기본 타임아웃
+
+  # HikariCP — RDW (Read/Write) / ADW (Analytics)
+  datasource:
+    rdw:
+      driver-class-name: oracle.jdbc.OracleDriver
+      jdbc-url: jdbc:oracle:thin:@10.10.50.10:1521/NSIGHT_RDW
+      username: nsight_rdw
+      password: CHANGEME              # 운영 반영 시 교체
+      hikari:
+        pool-name: nsight-rdw-pool
+        maximum-pool-size: 200        # 32C/256GB 기준 OLTP Pool
+        minimum-idle: 64
+        connection-timeout: 3000        # 연결 대기 3초(ms)
+        validation-timeout: 3000
+        idle-timeout: 600000            # 유휴 연결 10분
+        max-lifetime: 1800000         # 연결 최대 수명 30분
+        keepalive-time: 300000
+        auto-commit: false              # 트랜잭션 명시적 관리
+        connection-test-query: SELECT 1 FROM DUAL
+
+    adw:
+      driver-class-name: oracle.jdbc.OracleDriver
+      jdbc-url: jdbc:oracle:thin:@10.10.50.20:1521/NSIGHT_ADW
+      username: nsight_adw
+      password: CHANGEME
+      hikari:
+        pool-name: nsight-adw-pool
+        maximum-pool-size: 128        # Analytics Read Pool
+        minimum-idle: 32
+        connection-timeout: 3000
+        validation-timeout: 3000
+        idle-timeout: 600000
+        max-lifetime: 1800000
+        keepalive-time: 300000
+        auto-commit: false
+        read-only: true               # ADW 는 조회 전용
+        connection-test-query: SELECT 1 FROM DUAL
+
+mybatis:
+  configuration:
+    default-statement-timeout: 3      # 쿼리 타임아웃 3초
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: NULL
+    call-setters-on-nulls: true
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.nh.nsight
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      system: nsight
+      platform: marketing
+      deploy-style: mono
+
+logging:
+  level:
+    root: INFO
+    com.nh.nsight: INFO
+    org.mybatis: WARN
+    com.zaxxer.hikari: WARN
+  pattern:
+    # guid/traceId — MDC 또는 애플리케이션에서 설정 (Apache X-GUID 헤더와 연계)
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{guid}] [%X{traceId}] [%thread] %logger{36} - %msg%n"
+
+nsight:
+  session:
+    idle-timeout-minutes: 60          # 참고용 (실제 적용: server.servlet.session.timeout)
+    absolute-timeout-hours: 8         # SessionTimeoutFilter 에서 강제 만료
+  timeout:
+    transaction-seconds: 5
+    db-query-seconds: 3
+    external-connect-millis: 3000     # 외부 API 연결 타임아웃
+    external-read-millis: 5000        # 외부 API 응답 읽기 타임아웃
+  security:
+    cookie-domain: nh.marketing.com
+    masking-enabled: true               # 개인정보 마스킹 활성
+  log:
+    guid-header-name: X-GUID            # Apache Access Log 와 동일 헤더명
+    trace-header-name: X-Trace-Id

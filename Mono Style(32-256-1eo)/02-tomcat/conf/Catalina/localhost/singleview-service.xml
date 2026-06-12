@@ -1,0 +1,3 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 고객 Single View 조회 -->
+<Context path="/singleview-service" docBase="nsight-singleview-service.war" reloadable="true" crossContext="true" />

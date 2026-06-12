@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-ep Configuration (MONO)
+# WAR: ep.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-ep
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /ep
+
+nsight:
+  service:
+    code: EP
+    name: nsight-ep
+    war: ep.war
+

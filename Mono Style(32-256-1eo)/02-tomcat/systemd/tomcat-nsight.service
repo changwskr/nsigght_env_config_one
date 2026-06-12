@@ -1,0 +1,19 @@
+[Unit]
+Description=NSIGHT Tomcat Dev (32 vCPU / 256GB single VM, Heap 160GB)
+After=network.target
+
+[Service]
+Type=forking
+User=tomcat
+Group=tomcat
+Environment=HTTP_PORT=8080
+Environment=SHUTDOWN_PORT=8005
+Environment=CATALINA_BASE=/app/tomcat-nsight
+Environment=CATALINA_HOME=/opt/tomcat
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+Restart=on-failure
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

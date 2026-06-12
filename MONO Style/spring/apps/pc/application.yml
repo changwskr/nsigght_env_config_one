@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-pc Configuration (MONO)
+# WAR: pc.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-pc
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /pc
+
+nsight:
+  service:
+    code: PC
+    name: nsight-pc
+    war: pc.war
+

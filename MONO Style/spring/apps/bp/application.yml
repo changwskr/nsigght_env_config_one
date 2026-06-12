@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-bp Configuration (MONO)
+# WAR: bp.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-bp
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /bp
+
+nsight:
+  service:
+    code: BP
+    name: nsight-bp
+    war: bp.war
+

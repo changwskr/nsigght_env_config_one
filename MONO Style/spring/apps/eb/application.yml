@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-eb Configuration (MONO)
+# WAR: eb.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-eb
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /eb
+
+nsight:
+  service:
+    code: EB
+    name: nsight-eb
+    war: eb.war
+

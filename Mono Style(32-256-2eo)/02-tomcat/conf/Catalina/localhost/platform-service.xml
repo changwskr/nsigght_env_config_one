@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 플랫폼 공통/환경관리 -->
+<Context path="/platform-service" docBase="nsight-platform-service.war" reloadable="false" crossContext="true" />
+

@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 인증/세션/SSO 연계 -->
+<Context path="/auth" docBase="nsight-auth.war" reloadable="false" crossContext="true" />
+

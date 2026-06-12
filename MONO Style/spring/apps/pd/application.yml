@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-pd Configuration (MONO)
+# WAR: pd.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-pd
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /pd
+
+nsight:
+  service:
+    code: PD
+    name: nsight-pd
+    war: pd.war
+

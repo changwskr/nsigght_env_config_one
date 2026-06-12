@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================
+     NSIGHT Marketing Platform (MONO) - Tomcat server.xml
+     32 vCPU / 256GB — 단일 Tomcat 인스턴스에 17개 WAR 배포
+     Session: DeltaManager Cluster Replication
+     jvmRoute: setenv.sh JVM_ROUTE (tomcat01 / tomcat02)
+     ==========================================================
+     [연동 관계]
+       - setenv.sh              : JVM_ROUTE, Heap 192GB, spring.profiles.active
+       - nsight-balancer.conf   : route=tomcat01/02, stickysession=JSESSIONID
+       - contexts/*.xml         : 17 WAR Context (conf/Catalina/localhost/)
+       - static-membership.xml  : 운영 시 Multicast 대체 참고
+     ========================================================== -->
+
+<!-- shutdown 포트 — 기동 중인지 확인·종료 명령용 (외부 노출 차단 필수) -->
+<Server port="8005" shutdown="SHUTDOWN">
+
+    <!-- Tomcat 기동/종료 이벤트 리스너 -->
+    <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+    <GlobalNamingResources>
+        <!-- Tomcat Manager 등 기본 사용자 DB (운영 Manager 접근 제한 권장) -->
+        <Resource name="UserDatabase"
+                  auth="Container"
+                  type="org.apache.catalina.UserDatabase"
+                  description="User database that can be updated and saved"
+                  factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+                  pathname="conf/tomcat-users.xml" />
+    </GlobalNamingResources>
+
+    <Service name="Catalina">
+
+        <!-- HTTP Connector — Apache Reverse Proxy 가 8080 으로 전달 -->
+        <Connector port="8080"
+                   protocol="HTTP/1.1"
+                   maxThreads="3200"
+                   minSpareThreads="400"
+                   acceptCount="2000"
+                   maxConnections="50000"
+                   connectionTimeout="8000"
+                   keepAliveTimeout="5000"
+                   maxKeepAliveRequests="100"
+                   URIEncoding="UTF-8"
+                   useBodyEncodingForURI="true"
+                   server="NSIGHT-Tomcat-MONO"
+                   redirectPort="8443" />
+        <!-- maxThreads 3200     : 32 vCPU 기준 동시 요청 처리 스레드 -->
+        <!-- maxConnections 50000: 최대 TCP 연결 수 -->
+        <!-- acceptCount 2000    : 스레드 포화 시 대기 큐 -->
+
+        <!-- jvmRoute: Apache stickysession route suffix 와 일치 필수
+             예) JSESSIONID=ABC123.tomcat01  ← setenv.sh JVM_ROUTE=tomcat01 -->
+        <Engine name="Catalina" defaultHost="localhost" jvmRoute="${JVM_ROUTE}">
+
+            <Realm className="org.apache.catalina.realm.LockOutRealm">
+                <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+                       resourceName="UserDatabase"/>
+            </Realm>
+
+            <Host name="localhost"
+                  appBase="webapps"
+                  unpackWARs="true"
+                  autoDeploy="false"
+                  deployOnStartup="true">
+            <!-- appBase webapps       : 17개 WAR 배포 디렉터리 -->
+            <!-- autoDeploy false      : 운영 중 자동 배포 비활성 (CI/수동 배포) -->
+            <!-- deployOnStartup true  : 기동 시 contexts/*.xml + WAR 배포 -->
+
+                <!-- ====================================================
+                     DeltaManager Session Replication Cluster
+                     Tomcat-01 ↔ Tomcat-02 세션 메모리 복제
+                     모든 WAR web.xml 에 <distributable/> 필수
+                     ==================================================== -->
+                <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"
+                         channelSendOptions="8"
+                         notifyListenersOnReplication="true">
+
+                    <!-- DeltaManager: 세션 변경분(Delta)만 복제 -->
+                    <Manager className="org.apache.catalina.ha.session.DeltaManager"
+                             expireSessionsOnShutdown="false"
+                             notifyListenersOnReplication="true"
+                             processExpiresFrequency="6" />
+
+                    <Channel className="org.apache.catalina.tribes.group.GroupChannel">
+
+                        <!-- Membership — 클러스터 노드 자동 발견 (Multicast)
+                             운영 환경: cluster/static-membership.xml 참고하여 Static 전환 권장 -->
+                        <Membership className="org.apache.catalina.tribes.membership.McastService"
+                                    address="228.0.0.4"
+                                    port="45564"
+                                    frequency="500"
+                                    dropTime="3000" />
+
+                        <!-- Receiver — 다른 Tomcat 으로부터 세션 복제 데이터 수신 -->
+                        <Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver"
+                                  address="auto"
+                                  port="4000"
+                                  autoBind="100"
+                                  selectorTimeout="5000"
+                                  maxThreads="32" />
+
+                        <!-- Sender — 세션 변경 시 상대 Tomcat 으로 복제 데이터 송신 -->
+                        <Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter">
+                            <Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender" />
+                        </Sender>
+
+                        <!-- Interceptor — 장애 노드 감지·메시지 디스패치·처리량 제어 -->
+                        <Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector" />
+                        <Interceptor className="org.apache.catalina.tribes.group.interceptors.MessageDispatchInterceptor" />
+                        <Interceptor className="org.apache.catalina.tribes.group.interceptors.ThroughputInterceptor"
+                                      optionFlag="6" />
+                    </Channel>
+
+                    <!-- 정적 리소스(css/js/이미지)는 세션 복제 대상에서 제외 -->
+                    <Valve className="org.apache.catalina.ha.tcp.ReplicationValve"
+                           filter=".*\.gif|.*\.js|.*\.css|.*\.png|.*\.jpg|.*\.ico|.*\.woff2?" />
+
+                    <!-- 클러스터 세션 이벤트 리스너 -->
+                    <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener" />
+                </Cluster>
+
+                <!-- Tomcat Access Log — GUID/Trace ID 포함 (Apache nsight_combined 과 연계) -->
+                <Valve className="org.apache.catalina.valves.AccessLogValve"
+                       directory="logs"
+                       prefix="localhost_access_log"
+                       suffix=".txt"
+                       pattern="%h %l %u %t &quot;%r&quot; %s %b %D %{X-GUID}i %{X-Trace-Id}i" />
+
+            </Host>
+        </Engine>
+    </Service>
+</Server>

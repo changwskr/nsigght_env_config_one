@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  NSIGHT MONO - web.xml distributable 설정 가이드 (샘플)
+  ============================================================
+  [용도]
+    Tomcat $CATALINA_HOME/conf/web.xml 에 그대로 덮어쓰지 않고,
+    각 WAR 의 WEB-INF/web.xml 작성 시 참고하는 샘플/가이드 파일.
+
+  [적용 대상]
+    17개 WAR 전체 (cc.war ~ mg.war, ROOT.war)
+    DeltaManager Session Replication 사용 시 <distributable/> 필수
+
+  [적용 방법]
+    각 WAR WEB-INF/web.xml 의 <web-app> 직후에 추가:
+      <distributable/>
+
+  [Spring Boot WAR]
+    - src/main/webapp/WEB-INF/web.xml 생성
+    - 또는 SpringBootServletInitializer + web.xml 병행 구성
+
+  [연동 관계]
+    - server.xml Cluster (DeltaManager) : distributable 없으면 복제 불가
+    - application-common.yml            : session timeout 60m, cookie secure
+    - nsight-balancer.conf              : stickysession=JSESSIONID
+  ============================================================
+-->
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <!--
+      distributable — 클러스터 환경 세션 복제 가능 선언
+      DeltaManager 가 HttpSession 변경을 Tomcat-01 ↔ Tomcat-02 에 복제하려면
+      배포되는 모든 WAR 에 반드시 포함되어야 함
+    -->
+    <distributable/>
+
+    <!-- 세션·쿠키 공통 설정 (application-common.yml 과 정합) -->
+    <session-config>
+        <!-- Idle Session 60분 — 미사용 시 만료 (분 단위) -->
+        <session-timeout>60</session-timeout>
+
+        <cookie-config>
+            <!-- JavaScript 에서 JSESSIONID 접근 차단 (XSS 세션 탈취 방지) -->
+            <http-only>true</http-only>
+            <!-- HTTPS 전용 쿠키 (개발 환경은 application-dev.yml 에서 secure=false) -->
+            <secure>true</secure>
+        </cookie-config>
+
+        <!-- URL ;jsessionid= 방식 비활성 — 쿠키 기반 세션만 사용 -->
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+</web-app>

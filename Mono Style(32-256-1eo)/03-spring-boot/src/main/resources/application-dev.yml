@@ -1,0 +1,49 @@
+# 개발용 단일 VM (32 vCPU / 256GB) — localhost DB·축소 Pool
+spring:
+  datasource:
+    rdw:
+      jdbc-url: jdbc:oracle:thin:@//127.0.0.1:1521/DEV_RDW
+      username: ${RDW_DB_USER:nsight_dev}
+      password: ${RDW_DB_PASSWORD:CHANGEME}
+      driver-class-name: oracle.jdbc.OracleDriver
+      hikari:
+        pool-name: RDW-HIKARI-DEV
+        maximum-pool-size: 32
+        minimum-idle: 8
+        connection-timeout: 3000
+        validation-timeout: 2000
+        idle-timeout: 600000
+        max-lifetime: 1800000
+        auto-commit: false
+        connection-test-query: SELECT 1 FROM DUAL
+    applog:
+      jdbc-url: jdbc:oracle:thin:@//127.0.0.1:1521/DEV_APPLOG
+      username: ${APPLOG_DB_USER:nsight_dev}
+      password: ${APPLOG_DB_PASSWORD:CHANGEME}
+      driver-class-name: oracle.jdbc.OracleDriver
+      hikari:
+        pool-name: APPLOG-HIKARI-DEV
+        maximum-pool-size: 16
+        minimum-idle: 4
+        connection-timeout: 3000
+        auto-commit: false
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+logging:
+  level:
+    root: DEBUG
+    com.nh.nsight: DEBUG
+    org.mybatis: DEBUG
+
+nsight:
+  env: dev
+  session:
+    absolute-timeout-minutes: 480
+  cruzapim:
+    base-url: http://127.0.0.1:9080
+    retry-count: 0

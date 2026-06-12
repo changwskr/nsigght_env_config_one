@@ -1,0 +1,21 @@
+﻿# ============================================================
+# nsight-mg Configuration (MONO)
+# WAR: mg.war
+# ============================================================
+
+spring:
+  application:
+    name: nsight-mg
+  config:
+    import: optional:file:/app/nsight/config/application-common.yml
+
+server:
+  servlet:
+    context-path: /mg
+
+nsight:
+  service:
+    code: MG
+    name: nsight-mg
+    war: mg.war
+

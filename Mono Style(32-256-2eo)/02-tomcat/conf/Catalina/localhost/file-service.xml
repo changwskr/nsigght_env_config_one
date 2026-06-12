@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 파일 업로드/다운로드 관리 -->
+<Context path="/file-service" docBase="nsight-file-service.war" reloadable="false" crossContext="true" />
+
