@@ -1,0 +1,22 @@
+logging:
+  level:
+    root: INFO
+    com.nh.nsight: INFO
+    org.mybatis: INFO
+    org.springframework.session: INFO
+
+spring:
+  datasource:
+    rdw:
+      jdbc-url: jdbc:oracle:thin:@//rdw-stg-vip.nh.local:1521/RDW
+    adw:
+      jdbc-url: jdbc:oracle:thin:@//adw-stg-vip.nh.local:1521/ADW
+    sessiondb:
+      jdbc-url: jdbc:oracle:thin:@//sessiondb-stg-vip.nh.local:1521/SESSIONDB
+    logdb:
+      jdbc-url: jdbc:oracle:thin:@//logdb-stg-vip.nh.local:1521/LOGDB
+
+nsight:
+  monitoring:
+    response-warning-ms: 2000
+    response-critical-ms: 3000

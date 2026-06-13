@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NSIGHT Tomcat — Spring Session JDBC (DeltaManager 미사용), Apache Sticky + jvmRoute -->
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+  <Service name="Catalina">
+    <Connector port="8080" protocol="HTTP/1.1"
+      maxThreads="500" minSpareThreads="100" acceptCount="500" maxConnections="10000"
+      connectionTimeout="8000" keepAliveTimeout="5000" maxKeepAliveRequests="100"
+      URIEncoding="UTF-8" useBodyEncodingForURI="true" server="NSIGHT-Tomcat" redirectPort="8443" />
+    <Engine name="Catalina" defaultHost="localhost" jvmRoute="${JVM_ROUTE}">
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false" deployOnStartup="true">
+        <!-- Apache X-Forwarded-* 헤더 반영 (HTTPS scheme, secure cookie) -->
+        <Valve className="org.apache.catalina.valves.RemoteIpValve"
+          remoteIpHeader="X-Forwarded-For"
+          protocolHeader="X-Forwarded-Proto"
+          protocolHeaderHttpsValue="https"
+          internalProxies="10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}" />
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" prefix="access" suffix=".log"
+          pattern="%h %l %u %t &quot;%r&quot; %s %b %D %{X-GUID}i %{X-Trace-Id}i" />
+      </Host>
+    </Engine>
+  </Service>
+</Server>

@@ -1,0 +1,14 @@
+# NSIGHT 환경변수 템플릿 — /app/nsight/env/nsight.env 등으로 복사 후 값 입력
+# systemd EnvironmentFile= 또는 setenv.sh source 로 주입
+
+SPRING_PROFILES_ACTIVE=prd
+JVM_ROUTE=was1
+
+RDW_DB_USER=nsight_rdw
+RDW_DB_PASSWORD=CHANGEME
+ADW_DB_USER=nsight_adw
+ADW_DB_PASSWORD=CHANGEME
+SESSION_DB_USER=nsight_session
+SESSION_DB_PASSWORD=CHANGEME
+LOG_DB_USER=nsight_log
+LOG_DB_PASSWORD=CHANGEME

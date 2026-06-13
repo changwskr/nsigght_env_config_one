@@ -1,0 +1,48 @@
+# NSIGHT Spring Session JDBC 적용 가이드
+
+## 1. Redis 설정 제거
+- spring.session.store-type=redis 제거
+- spring.data.redis 제거
+- Redis 관련 Health Check 비활성화
+
+## 2. Spring Session JDBC 적용
+- spring.session.store-type=jdbc
+- spring.session.jdbc.table-name=SPRING_SESSION
+- spring/sql/spring-session-schema-oracle.sql 선반영 (initialize-schema: never)
+- java-config: SessionJdbcConfig (@EnableJdbcHttpSession, sessiondbDataSource)
+
+## 3. Tomcat DeltaManager
+- JDBC Session 사용 시 Tomcat DeltaManager/Cluster 사용하지 않음
+- server.xml: Cluster 제거, RemoteIpValve 추가
+- web.xml: distributable 제거
+
+## 4. DataSource / MyBatis
+- DataSourceConfig: RDW, ADW, SESSIONDB, LOGDB (HikariCP)
+- MyBatisConfig + MapperScan: RDW/ADW 분리
+- dev/stg: application-dev.yml, application-stg.yml 에 DB URL override
+
+## 5. Session Filter
+- AbsoluteSessionTimeoutFilter: nsight.session.absolute-timeout-hours (기본 8시간)
+- SessionFilterConfig에서 FilterRegistrationBean 등록
+
+## 6. 모든 WAR 공통
+- 동일 SESSIONDB 사용
+- 동일 JSESSIONID 쿠키 (path=/, httpOnly, secure=prd)
+- Session 객체 Serializable 권장 (LoginUserSession 샘플 참고)
+
+## 7. Apache
+- 16 context ProxyPass + ProxyPassReverseCookiePath
+- HSTS (VirtualHost)
+- Sticky: JSESSIONID + jvmRoute (성능용, JDBC Session 시 필수 아님)
+
+## 8. 배포 순서
+1. SESSIONDB DDL
+2. spring/config → /app/nsight/config/ 복사
+3. java-config JAR → 각 WAR lib
+4. deploy-war-layout.sh (16 WAR + Context)
+5. validate-endpoints.sh
+
+## 9. 운영 점검
+- SPRING_SESSION 건수 / SPRING_SESSION_ATTRIBUTES BLOB 크기
+- SESSIONDB Hikari Pool 사용률
+- 만료 세션 Cleanup (cleanup-cron 5분)

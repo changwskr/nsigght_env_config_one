@@ -1,0 +1,17 @@
+no,war_file,context_path,description,health_check
+1,cc.war,/cc,Common,/cc/actuator/health
+2,ic.war,/ic,Integration Customer,/ic/actuator/health
+3,pc.war,/pc,Private Customer,/pc/actuator/health
+4,bc.war,/bc,Business Customer,/bc/actuator/health
+5,ms.war,/ms,Mini Single View,/ms/actuator/health
+6,sv.war,/sv,Single View,/sv/actuator/health
+7,pd.war,/pd,Product,/pd/actuator/health
+8,cm.war,/cm,Campaign,/cm/actuator/health
+9,eb.war,/eb,EBM,/eb/actuator/health
+10,ep.war,/ep,Event Processing,/ep/actuator/health
+11,bp.war,/bp,Behavior Processing,/bp/actuator/health
+12,bd.war,/bd,Behavior Data,/bd/actuator/health
+13,ss.war,/ss,Sales Support,/ss/actuator/health
+14,cs.war,/cs,Common Service,/cs/actuator/health
+15,ct.war,/ct,Contents,/ct/actuator/health
+16,mg.war,/mg,Message,/mg/actuator/health

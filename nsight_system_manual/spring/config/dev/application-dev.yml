@@ -1,0 +1,51 @@
+# 개발 프로필 — localhost DB·축소 Pool
+spring:
+  datasource:
+    rdw:
+      jdbc-url: jdbc:oracle:thin:@//127.0.0.1:1521/DEV_RDW
+      username: ${RDW_DB_USER:nsight_dev}
+      password: ${RDW_DB_PASSWORD:CHANGEME}
+      hikari:
+        maximum-pool-size: 8
+        minimum-idle: 2
+    adw:
+      jdbc-url: jdbc:oracle:thin:@//127.0.0.1:1521/DEV_ADW
+      username: ${ADW_DB_USER:nsight_dev}
+      password: ${ADW_DB_PASSWORD:CHANGEME}
+      hikari:
+        maximum-pool-size: 4
+        minimum-idle: 1
+    sessiondb:
+      jdbc-url: jdbc:oracle:thin:@//127.0.0.1:1521/DEV_SESSIONDB
+      username: ${SESSION_DB_USER:nsight_dev}
+      password: ${SESSION_DB_PASSWORD:CHANGEME}
+      hikari:
+        maximum-pool-size: 8
+        minimum-idle: 2
+    logdb:
+      jdbc-url: jdbc:oracle:thin:@//127.0.0.1:1521/DEV_LOGDB
+      username: ${LOG_DB_USER:nsight_dev}
+      password: ${LOG_DB_PASSWORD:CHANGEME}
+      hikari:
+        maximum-pool-size: 4
+        minimum-idle: 1
+
+logging:
+  level:
+    root: INFO
+    com.nh.nsight: DEBUG
+    org.mybatis: DEBUG
+    org.springframework.session: DEBUG
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+nsight:
+  security:
+    csrf:
+      enabled: false
+  datasource:
+    query-timeout-seconds: 10

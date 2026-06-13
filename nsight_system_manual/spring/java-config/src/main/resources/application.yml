@@ -1,0 +1,4 @@
+# WAR 공통 — 외부 YAML은 Tomcat setenv.sh spring.config.additional-location 참조
+spring:
+  application:
+    name: nsight-common-config
